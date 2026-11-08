@@ -1,0 +1,53 @@
+# Never publish credentials or local configuration.
+.env
+.env.*
+!.env.example
+.credentials*
+**/.credentials*
+.dsh/
+**/.dsh/
+.deepseek-wallpaper-companion/
+**/.deepseek-wallpaper-companion/
+companion-settings.local.json
+*.local.json
+
+# Private runtime: history, model memory, state, diagnostics.
+harness-home/
+workspace/
+runtime/
+data/
+chat-ledger-*.json
+companion-session-*.json
+companion-avatar-state-*.json
+companion-runtime-*.patch.yml
+desktop-launch.json
+desktop-wallpaper-*.json
+server-*.json
+launcher-*-last.json
+*.log
+*.lock
+*.tmp
+*.bak
+*.jsonl
+*.sqlite*
+*.db
+
+# Media are distributed as a separate Release archive.
+room-animation-v2/*.png
+room-animation-v2/*.mp4
+companion-typing-v1/*.mp4
+deepseek-launcher-v4.exe
+
+# Installed/build/editor/test artifacts.
+node_modules/
+dist/
+release/
+work/
+.test-work/
+__pycache__/
+*.pyc
+*.zip
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
