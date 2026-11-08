@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "user_requested": true,
+  "corrections": [
+    {
+      "file": "companion-typing-v1/B.mp4",
+      "before_sha256": "504fffd925e8f324b602f380c07dfbc7ebae071bb2e448704ba58b4e5294ef0c",
+      "after_sha256": "8ed9572f6b058353fed36ec09c47cb4369225fe2877b9e61a070fe62aee50a44",
+      "reason": "Match typing shadow/highlight levels to established idle lighting",
+      "method": "Color-only luma curve; source chroma and audio retained; no geometry or frame-count change",
+      "source_clip": "5302"
+    },
+    {
+      "file": "companion-typing-v1/E.mp4",
+      "before_sha256": "ea8cb2dc275f3b336ca628d565ae00785df64bc083698a131ecdf4c2e37bfbc0",
+      "after_sha256": "60efdce87a095268d281206099342df50e16c43cfcb56d6907901ac8dfa9092a",
+      "reason": "Match typing shadow/highlight levels to established idle lighting",
+      "method": "Color-only luma curve; source chroma and audio retained; no geometry or frame-count change",
+      "source_clip": "5306"
+    },
+    {
+      "file": "room-animation-v2/CD.mp4",
+      "before_sha256": "6f83e2663a508e36aaeba1898fbc78e33ecd7592a1adbbbee392a9674061fd87",
+      "after_sha256": "3e9fda08c9b9ef5c0c4a67f3d9194eb61138b3964b97b1bd1959afd5b96f43bc",
+      "reason": "Replace old cyan-spill clip with user-provided5516 and match established room brightness",
+      "method": "User-regenerated C-D transition plus full-frame luma normalization; no spatial compositing",
+      "source_clip": "5516",
+      "video_frames": 121,
+      "video_fps": 24,
+      "video_duration_seconds": 5.041667
+    }
+  ],
+  "approved_by_local_visual_review": true,
+  "unresolved": [],
+  "resolved_redo": "5516"
+}

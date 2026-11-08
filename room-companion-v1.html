@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>房间</title><style>html,body{height:100%;margin:0;background:#11121e;overflow:hidden;color:#f1f0f6;font:14px "Microsoft YaHei",sans-serif}*{box-sizing:border-box}.scene{position:relative;width:100vw;height:100vh;visibility:hidden}.scene[data-mark-ready=true]{visibility:visible}.scene img,.scene video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}.scene canvas{position:absolute;pointer-events:none;z-index:1}.scene video{visibility:hidden}.scene video[data-active=true]{visibility:visible;z-index:2}.overlay{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;max-width:calc(100vw - 28px);border:1px solid #555b70;border-radius:10px;padding:10px 14px;background:#202433e8;text-align:center;font-size:13px}button{font:inherit;color:#151b29;background:#c0cee9;border:0;border-radius:6px;padding:7px 12px;margin-left:8px;cursor:pointer}[hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;clip:rect(0,0,0,0);overflow:hidden}</style></head><body><div id="scene" class="scene" data-state="A" data-anchor="A" data-mark-ready="false" aria-label="房间中的角色动画"><img id="pose" src="/room-animation-v2/pose-A.png" alt="角色坐在桌前等待消息"><canvas id="idle-breath" width="0" height="0" aria-hidden="true" hidden></canvas><video id="clip-a" muted playsinline preload="auto" aria-hidden="true" data-active="false"></video><video id="clip-b" muted playsinline preload="auto" aria-hidden="true" data-active="false"></video></div><span id="status" class="sr-only" role="status"></span><p id="connection" class="overlay" data-state="loading" role="status">正在连接房间…</p><p id="playback-resume" class="overlay" hidden>动画暂停了，点一下继续。<button id="resume-animation" type="button" disabled>继续动画</button></p><p id="error" class="overlay" role="alert" hidden></p><script src="/idle-breath-v4.js"></script><script src="/room-mark-cover-v4.js"></script><script>
+(() => {
+  'use strict';
+  const base = './room-animation-v2/';
+  const graph = {A:['B'], B:['A','C'], C:['B','D'], D:['C','E'], E:['D','F'], F:['E']};
+  const loops = {B:'loop-B', E:'loop-E', F:'loop-F'};
+  const anchorLabels = {A:'等消息', B:'看消息', C:'准备离座', D:'坐在床边', E:'看消息', F:'睡觉中'};
+  const motionLabels = {AB:'拿起手机', BA:'放回手机', BC:'关好平板', CB:'打开平板', CD:'走到床边', DC:'回到桌前', DE:'躺下休息', ED:'起身坐好', EF:'放下手机', FE:'醒来看消息', 'loop-B':'阅读中', 'loop-E':'阅读中', 'loop-F':'睡觉中'};
+  const poseAlts = {A:'角色坐在桌前等待消息', B:'角色坐在桌前看手机', C:'角色关好平板准备离座', D:'角色坐在床边', E:'角色躺在床上看手机', F:'角色在床上睡觉'};
+  const scene = document.getElementById('scene');
+  const poster = document.getElementById('pose');
+  const idleBreath = window.roomIdleBreath = createRoomIdleBreath({scene, image:poster, canvas:document.getElementById('idle-breath')});
+  const status = document.getElementById('status');
+  const error = document.getElementById('error');
+  const resumeNotice = document.getElementById('playback-resume');
+  const videos = [document.getElementById('clip-a'), document.getElementById('clip-b')];
+  const buttons = [...document.querySelectorAll('button')];
+  let anchor = 'A';
+  let target = 'A';
+  let active = null;
+  let motion = null;
+  let generation = 0;
+  let loaded = false;
+  let failed = false;
+  let typing = null;
+  let cycleSequence = 0;
+  const cyclePrefix = crypto.randomUUID();
+
+  function shortestPath(from, to) {
+    const queue = [[from]];
+    const visited = new Set([from]);
+    while (queue.length) {
+      const path = queue.shift();
+      const last = path[path.length - 1];
+      if (last === to) return path;
+      for (const next of graph[last]) {
+        if (!visited.has(next)) { visited.add(next); queue.push([...path, next]); }
+      }
+    }
+    throw new Error('两个姿态之间没有连接');
+  }
+
+  function fail(reason) {
+    if (failed) return;
+    failed = true;
+    idleBreath.hide();
+    resumeNotice.hidden = true;
+    generation++;
+    videos.forEach(video => { video.pause(); video.onended = null; });
+    buttons.forEach(button => { button.disabled = true; });
+    error.textContent = '素材未能播放，请确认此页旁的 room-animation-v2 文件夹完整，再重新打开。';
+    error.hidden = false;
+    console.error(reason);
+  }
+
+  function ready(video) {
+    if (video.error) return Promise.reject(new Error('无法读取视频：' + video.getAttribute('src')));
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && !video.seeking) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => done(new Error('读取视频超时')), 30000);
+      function done(reason) {
+        clearTimeout(timeout);
+        video.removeEventListener('loadeddata', check);
+        video.removeEventListener('seeked', check);
+        video.removeEventListener('error', broken);
+        reason ? reject(reason) : resolve();
+      }
+      function check() { if (video.readyState >= 2 && !video.seeking) done(); }
+      function broken() { done(new Error('无法读取视频：' + video.getAttribute('src'))); }
+      video.addEventListener('loadeddata', check);
+      video.addEventListener('seeked', check);
+      video.addEventListener('error', broken);
+    });
+  }
+
+  async function prepare(video, filename, sourceOverride) {
+    video.pause();
+    video.onended = null;
+    const source = sourceOverride || base + filename + '.mp4';
+    if (video.getAttribute('src') !== source) {
+      video.src = source;
+      video.load();
+    } else if (video.ended || video.currentTime !== 0) video.load();
+    await ready(video);
+  }
+
+  function firstFrame(video, owner) {
+    let callback;
+    let timeout;
+    let done;
+    const promise = new Promise((resolve, reject) => {
+      done = () => { clearTimeout(timeout); resolve(); };
+      function expire() {
+        // A legitimate incoming owner can pause before its first decoded
+        // frame. Keep the outgoing display and allow foreground/gesture
+        // recovery; time spent paused or hidden is not a decoding failure.
+        if (ownsPlaybackVideo(owner, video) && (video.paused || document.visibilityState !== 'visible')) {
+          timeout = setTimeout(expire, 15000);
+          return;
+        }
+        reject(new Error('等待视频画面超时'));
+      }
+      timeout = setTimeout(expire, 15000);
+      if ('requestVideoFrameCallback' in video) callback = video.requestVideoFrameCallback(done);
+      else video.addEventListener('timeupdate', done, {once:true});
+    });
+    return {
+      promise,
+      cancel() {
+        clearTimeout(timeout);
+        if (callback !== undefined) video.cancelVideoFrameCallback(callback);
+        video.removeEventListener('timeupdate', done);
+      }
+    };
+  }
+
+  async function startMotion(from, to, filename, typingOwner = null) {
+    const owner = {from, to, filename, token:++generation, video:null, playIssued:false, revealed:false, completed:false, recoveryAttempted:false, recoveryPending:false, typing:typingOwner};
+    motion = owner;
+    const idleSettled = idleBreath.settle();
+    resumeNotice.hidden = true;
+    status.textContent = typingOwner ? '正在打字' : motionLabels[filename];
+    const previous = active;
+    const next = videos.find(video => video !== previous);
+    owner.video = next;
+    let frame;
+    let revealed = false;
+    let completed = false;
+    function finish() {
+      if (!revealed || !completed || generation !== owner.token || motion !== owner || active !== next) return;
+      next.onended = null;
+      anchor = to;
+      scene.dataset.anchor = anchor;
+      motion = null;
+      if (typingOwner) {
+        if (typing && typing.turnId === typingOwner.turnId && typing.cycleId === typingOwner.cycleId) typing.awaiting = true;
+        window.dispatchEvent(new CustomEvent('room:typing-ended', {detail:{turnId:typingOwner.turnId, anchor:to, cycleId:typingOwner.cycleId}}));
+      }
+      advance();
+    }
+    try {
+      await prepare(next, filename, typingOwner ? '/companion-typing-v1/' + to + '.mp4' : undefined);
+      await idleSettled;
+      if (generation !== owner.token || motion !== owner) return;
+      // Register before play: a delayed first-frame callback can arrive after ended.
+      next.onended = event => {
+        if (!event.isTrusted || !next.ended || generation !== owner.token || motion !== owner) return;
+        completed = true;
+        owner.completed = true;
+        finish();
+      };
+      frame = firstFrame(next, owner);
+      owner.playIssued = true;
+      try { await next.play(); }
+      catch (reason) {
+        if (!ownsPlaybackVideo(owner, next) || !next.paused || next.error) throw reason;
+        void recoverPlayback();
+      }
+      await frame.promise;
+      if (generation !== owner.token || motion !== owner) return;
+      // Reveal only decoded video; leave the outgoing last frame underneath until then.
+      idleBreath.hide();
+      active = next;
+      next.dataset.active = 'true';
+      if (previous) { previous.pause(); previous.dataset.active = 'false'; }
+      scene.dataset.state = filename;
+      revealed = true;
+      owner.revealed = true;
+      if (typingOwner) window.dispatchEvent(new CustomEvent('room:typing-started', {detail:{turnId:typingOwner.turnId, anchor:to, cycleId:typingOwner.cycleId, durationMs:Math.round(next.duration * 1000)}}));
+      finish();
+    } catch (reason) {
+      if (frame) frame.cancel();
+      if (generation === owner.token) fail(reason);
+    }
+  }
+
+  function showAnchor() {
+    resumeNotice.hidden = true;
+    poster.src = base + 'pose-' + anchor + '.png';
+    poster.alt = poseAlts[anchor];
+    if (active) { active.pause(); active.onended = null; active.dataset.active = 'false'; }
+    active = null;
+    scene.dataset.state = anchor;
+    status.textContent = anchorLabels[anchor];
+    if (anchor === 'A') void idleBreath.enter();
+    else idleBreath.hide();
+  }
+
+  function advance() {
+    if (!loaded || failed || motion) return;
+    if (typing && typing.awaiting) return;
+    const path = shortestPath(anchor, target);
+    if (path.length > 1) void startMotion(anchor, path[1], anchor + path[1]);
+    else if (typing && anchor === typing.anchor) {
+      typing.cycleId = cyclePrefix + '-' + (++cycleSequence);
+      const captured = {turnId:typing.turnId, anchor, cycleId:typing.cycleId};
+      void startMotion(anchor, anchor, 'typing-' + anchor, captured);
+    }
+    else if (loops[anchor]) void startMotion(anchor, anchor, loops[anchor]);
+    else showAnchor();
+  }
+
+  function command(next) {
+    if (failed) return;
+    target = next;
+    advance();
+  }
+
+  function onDeskSide() {
+    return 'ABC'.includes(motion ? motion.to : anchor);
+  }
+
+  function ownsPlaybackVideo(owner, video) {
+    return loaded && !failed && owner && motion === owner && generation === owner.token &&
+      owner.video === video && owner.playIssued && !owner.completed && (!owner.revealed || active === video);
+  }
+
+  async function recoverPlayback({foreground = false, gesture = false} = {}) {
+    const owner = motion;
+    const video = owner?.video;
+    if (!ownsPlaybackVideo(owner, video) || !video.paused || video.ended || video.error) return;
+    if (document.visibilityState !== 'visible') { resumeNotice.hidden = false; return; }
+    if (owner.recoveryPending) return;
+    if (foreground) owner.recoveryAttempted = false;
+    if (owner.recoveryAttempted && !gesture) { resumeNotice.hidden = false; return; }
+    owner.recoveryAttempted = true;
+    owner.recoveryPending = true;
+    try {
+      // Continue this owner at its existing time; pause is never an endpoint.
+      await video.play();
+      if (ownsPlaybackVideo(owner, video)) resumeNotice.hidden = !video.paused;
+    } catch (_) {
+      if (ownsPlaybackVideo(owner, video)) resumeNotice.hidden = false;
+    } finally {
+      owner.recoveryPending = false;
+    }
+  }
+
+  videos.forEach(video => {
+    video.addEventListener('pause', () => {
+      if (ownsPlaybackVideo(motion, video)) void recoverPlayback();
+    });
+    video.addEventListener('playing', () => {
+      if (ownsPlaybackVideo(motion, video) && !video.paused) resumeNotice.hidden = true;
+    });
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') void recoverPlayback({foreground:true});
+  });
+  window.addEventListener('focus', () => { void recoverPlayback({foreground:true}); });
+  window.addEventListener('pageshow', () => { void recoverPlayback({foreground:true}); });
+  document.getElementById('resume-animation').addEventListener('click', () => { void recoverPlayback({gesture:true}); });
+
+  const receivedIds = new Set();
+  function setIntent(intent) {
+    const destinations = {sleep:'F', wake:'A', work:'B', putdown:onDeskSide() ? 'A' : 'F', read:onDeskSide() ? 'B' : 'E'};
+    if (!Object.hasOwn(destinations, intent)) return false;
+    command(destinations[intent]);
+    return true;
+  }
+  function receiveMessage({id, text, intent = 'read'} = {}) {
+    if (failed) return false;
+    const key = id == null ? null : String(id);
+    if (key !== null && receivedIds.has(key)) return false;
+    if (key !== null) {
+      receivedIds.add(key);
+      if (receivedIds.size > 1000) receivedIds.delete(receivedIds.values().next().value);
+    }
+    setIntent(['sleep','wake','putdown','read','work'].includes(intent) ? intent : 'read');
+    return true;
+  }
+  function queueTyping({turnId, anchor:nextAnchor} = {}) {
+    if (failed || typeof turnId !== 'string' || !turnId || !['B','E'].includes(nextAnchor)) return false;
+    if (typing) return typing.turnId === turnId && typing.anchor === nextAnchor;
+    typing = {turnId, anchor:nextAnchor, cycleId:null, awaiting:false};
+    command(nextAnchor);
+    return true;
+  }
+  function continueTyping({turnId, cycleId} = {}) {
+    if (!typing || typing.turnId !== turnId || typing.cycleId !== cycleId || !typing.awaiting) return false;
+    typing.awaiting = false;
+    advance();
+    return true;
+  }
+  function finishTyping({turnId} = {}) {
+    if (!typing || typing.turnId !== turnId) return false;
+    typing = null;
+    // A running owner still reaches its natural endpoint. The client supplies
+    // its next destination synchronously before another clip is selected.
+    queueMicrotask(advance);
+    return true;
+  }
+  window.roomController = Object.freeze({
+    receiveMessage,
+    setIntent,
+    queueTyping,
+    continueTyping,
+    finishTyping,
+    getState: () => Object.freeze({anchor, target, motion:motion ? Object.freeze({from:motion.from, to:motion.to, filename:motion.filename}) : null, typing:typing ? Object.freeze({...typing}) : null, ready:loaded, failed})
+  });
+
+  // Preload every clip and pose. These detached preloaders never play.
+  const filenames = [...Object.entries(graph).flatMap(([from, tos]) => tos.map(to => from + to)), ...Object.values(loops)];
+  const preloaders = filenames.map(filename => {
+    const video = document.createElement('video');
+    video.preload = 'auto';
+    video.muted = true;
+    video.playsInline = true;
+    video.src = base + filename + '.mp4';
+    video.load();
+    return video;
+  });
+  const poses = Object.keys(graph).map(key => {
+    const image = new Image();
+    image.src = base + 'pose-' + key + '.png';
+    return image;
+  });
+  Promise.all([window.roomMarkCover?.ready || Promise.reject(new Error('房间画面处理脚本未就绪')), ...poses.map(image => image.decode()), ...preloaders.map(ready)]).then(() => {
+    loaded = true;
+    buttons.forEach(button => { button.disabled = false; });
+    advance();
+    window.dispatchEvent(new Event('room:ready'));
+  }).catch(fail);
+})();
+</script><script src="/companion-room-v1.js"></script></body></html>

@@ -1,0 +1,17 @@
+{
+  "name": "deepseek-desktop-companion",
+  "version": "1.0.0",
+  "description": "A local Windows desktop room with preset animation and DeepSeek Harness chat synchronization",
+  "type": "module",
+  "license": "MIT",
+  "private": true,
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "check": "node scripts/verify-release.mjs",
+    "verify:media": "node scripts/verify-release.mjs --require-media",
+    "test": "node --test tests/*.test.mjs && powershell.exe -NoProfile -File tests/portable-paths.tests.ps1",
+    "test:node": "node --test tests/*.test.mjs",
+    "check:windows": "powershell.exe -NoProfile -File tests/portable-paths.tests.ps1",
+    "package:release": "python scripts/package-release.py"
+  }
+}

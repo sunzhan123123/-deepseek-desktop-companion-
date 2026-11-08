@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>DeepSeek</title>
+<style>
+:root{font:14px/1.65 "Microsoft YaHei","PingFang SC",system-ui,sans-serif;color:#e7e9f1;background:#151720;color-scheme:dark}*{box-sizing:border-box}html,body{height:100%;margin:0}body{display:flex;flex-direction:column;overflow:hidden}header{padding:20px 20px 15px;border-bottom:1px solid #2b2e3b;flex:none}h1{font-size:17px;font-weight:600;letter-spacing:.025em;margin:0 0 5px}#status{margin:0;color:#9fa7bc;font-size:12px;min-height:20px}#messages{flex:1;overflow-y:auto;overscroll-behavior:contain;min-height:0;padding:21px 18px;display:flex;flex-direction:column;gap:14px;scrollbar-width:thin;scrollbar-color:#3b4054 transparent}.bubble{padding:11px 14px;max-width:92%;border-radius:13px;white-space:pre-wrap;overflow-wrap:anywhere;margin:0;font-size:14px}.user{align-self:flex-end;background:#313955;color:#f0f2f8;border-bottom-right-radius:4px}.assistant{align-self:flex-start;background:#242835;color:#e5e8f1;border-bottom-left-radius:4px}.turn-error{font-size:12px;color:#d5b7a9;align-self:flex-start;padding:0 3px;margin:0;overflow-wrap:anywhere;white-space:pre-wrap}form{flex:none;padding:13px 16px 18px;display:flex;gap:9px;align-items:flex-end;border-top:1px solid #2b2e3b;background:#191c27}textarea{display:block;flex:1;min-width:0;resize:none;height:80px;max-height:160px;border:1px solid #3c4256;background:#202432;color:#edf0f9;border-radius:10px;padding:11px 12px;font:inherit;outline:none}textarea:focus{border-color:#7d90bd}textarea::placeholder{color:#8d95aa}button{height:42px;border:0;border-radius:9px;padding:0 15px;background:#738bb8;color:#0b1221;font:600 13px "Microsoft YaHei",sans-serif;cursor:pointer}button:disabled{background:#343c50;color:#8590a9;cursor:default}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}@media(max-height:500px){header{padding-top:10px;padding-bottom:8px}textarea{height:55px}form{padding-bottom:10px}}
+.title-row{display:flex;align-items:baseline;justify-content:space-between;gap:16px}.room-link{font-size:12px;color:#a9bce0;text-decoration:none;white-space:nowrap}.room-link:hover{text-decoration:underline}.room-link:focus-visible{outline:2px solid #a9bce0;outline-offset:4px;border-radius:2px}
+.header-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}.secondary{height:28px;padding:0 9px;border:1px solid #3c4256;border-radius:6px;background:transparent;color:#a9bce0;font-size:12px;font-weight:400;white-space:nowrap}.secondary:disabled{background:transparent;color:#6f7a94;border-color:#303647}.secondary:enabled:hover{background:#242835}.secondary:focus-visible{outline:2px solid #a9bce0;outline-offset:3px}
+#composer-error{flex:none;font-size:12px;color:#d5b7a9;margin:0;padding:8px 19px;overflow-wrap:anywhere;white-space:pre-wrap}
+</style>
+<script src="/deepseek-chat-v1.js" defer></script>
+</head>
+<body>
+<header><div class="title-row"><h1>DeepSeek</h1><div class="header-actions"><button id="clear-history" class="secondary" type="button" title="只清空聊天记录，保留对话记忆。" disabled>清空聊天记录</button><a class="room-link" href="/room" target="_blank" rel="noopener">打开房间</a></div></div><p id="status" role="status" aria-live="polite"></p></header>
+<main id="messages" role="log" aria-label="聊天记录" aria-live="polite"></main>
+<p id="composer-error" role="alert" hidden></p>
+<form id="composer"><label class="sr-only" for="message">消息</label><textarea id="message" aria-describedby="composer-error" placeholder="发一条消息…" maxlength="24000" rows="2" autocomplete="off"></textarea><button id="send" type="submit" disabled>发送</button></form>
+</body>
+</html>

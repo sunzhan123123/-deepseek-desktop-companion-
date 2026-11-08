@@ -1,0 +1,177 @@
+{
+  "version": "1.0.0",
+  "processing": "15 video-only stream-copy exports; picture bitstreams and video durations verified unchanged; original creator files untouched",
+  "files": [
+    {
+      "file": "room-animation-v2/AB.mp4",
+      "bytes": 2384510,
+      "sha256": "c569ef1724ff00ec0b55d1307123b8a0f0b303f2a5fd8fc2d4ee96da606d72dd",
+      "sourceSha256": "f155801344a3c3dadd0fc624ed24cdc4b7deeb964c94cf810327284e8a104e6b",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "b991e5e7915c3ccfa6c1c1bec034c4cc5992815130470aadf8f436c113dcbd8d",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/BA.mp4",
+      "bytes": 2209946,
+      "sha256": "31be9a32a6e62164c925013391d28fd768cc9dc6ec8272a2a27eaa0dfb3a132f",
+      "sourceSha256": "38c0429ee069a09564d2cf410c126b115ef1dc5b43aed75f2bfbd5f6642cb320",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "273758135eeeceec40dbd18a72601e9a87ee3b9a373c511e537916e19fd65e84",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/BC.mp4",
+      "bytes": 2264646,
+      "sha256": "8fe0ef07eed93a7d8b9ae874dfeca6b7cc33a325ea4fd8ab49352eb61b84a0b4",
+      "sourceSha256": "c089bc2684184a86faafff62b28e98947cc771c4692344bdd8e9e6878f57b2f0",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "23e156aee65b8d75ecd232de6760d3f3718136955d5e438b93a005b782347b16",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/CB.mp4",
+      "bytes": 2264550,
+      "sha256": "ea4b87ac1d71c42d0594801abe4d2733aa0375b8d5a2a41c15933ee8039fb78a",
+      "sourceSha256": "7ec0c0c1d1c1d3e5c4bbd3be9192028c0e6a4bb187c4973c811be81277b6b2fd",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "089101a14a3ce84b065630450ad1918acc4cfa1e7c5891f11ba8dbf8dc773afc",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/CD.mp4",
+      "bytes": 2486566,
+      "sha256": "ba6fc6bea71e0847ac57af3bfd839a5cce614e48e26834a21a60ee94529c48f4",
+      "sourceSha256": "3e9fda08c9b9ef5c0c4a67f3d9194eb61138b3964b97b1bd1959afd5b96f43bc",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "286d4a3497d8983d3cbba8898a53e63001bdf1940182b92d2053863689c425d4",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/DC.mp4",
+      "bytes": 2885968,
+      "sha256": "47558578b22ee4e12dd750666a9da8e2632028b8a32b68fddf5fd82f85f66514",
+      "sourceSha256": "235bd39cca14f1ed18c59a052c21de2aba2d623a77c46cde695df284a5eb0806",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "f13790f0b956071b16b887cb62591140d4cce6eb466105a01b6007c48dee5388",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/DE.mp4",
+      "bytes": 1646813,
+      "sha256": "1deb24ac5ab81ef7890f71fb10037744453677d3df0d75d9c0501addc7954d87",
+      "sourceSha256": "6ec513f2b380623d424883a447ae57f9b6c4cd027454a79ef3e614bee02c7b64",
+      "audioTracksRemoved": 0,
+      "videoBitstreamSha256": "8725a343df2da57db208052492c5a632321f52c56d4381fcf087c0a6ab7ef6f5",
+      "durationSeconds": 6.541667
+    },
+    {
+      "file": "room-animation-v2/ED.mp4",
+      "bytes": 1785955,
+      "sha256": "94ece0050e8d5322278bc464739211e17639ab923447e888595975c58210fee0",
+      "sourceSha256": "a99830d70e556b8ed36130c3abff314b6effb949928b075ebe7f601c836f6f57",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "4eeb14eddd6ad3ec2b099c2a3dbc30c625c1f52739223854f774f6eac7275315",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/EF.mp4",
+      "bytes": 1767471,
+      "sha256": "42d9142fe5ed7bea9d4597872ed2f65ddfea4a28e27a0da9b7fea217b193fde0",
+      "sourceSha256": "ac109be5b5aaf6a46c94b60376e88326f0ef560085dda971947c022edc0fd2cd",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "2dbc997ea029c6317a33d84ca0ba804f9b0e25645d1c4bfd2b2740b20ae0ce3e",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/FE.mp4",
+      "bytes": 1762734,
+      "sha256": "51f0e0653744a2892a06dd150e73d4cdf53e2c8aed6e8b6c265798cbe686a0ee",
+      "sourceSha256": "0d29442e5370e7dd30577499d2ad51437c6a908234da062161b0c4b1a3c58827",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "b461e70330bd25a5c9eb0c18e235218e3c6e2d12eddffb254e935f7858610c45",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/loop-B.mp4",
+      "bytes": 2107503,
+      "sha256": "f60cc634455502ddedeaa5d27d822bd0541d1e6d9be24ce9ee7b2a9fb0f3f79d",
+      "sourceSha256": "3d6defc0234b52dde56f4d715ed82d75175eb0d90c518d6dcd960157f15f4dda",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "b67becb4136492b8c6cfe821b128adf2a52853ece52190ddae3fc24b4e98ae0a",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/loop-E.mp4",
+      "bytes": 595099,
+      "sha256": "862855789f116c85946208c31541a76851e0240a089bb8e316d93036fb126d79",
+      "sourceSha256": "2d106b12e8b665756bfe1a25e4831c6e270f29bd49b41cdaebcbd6f61fc35fe7",
+      "audioTracksRemoved": 0,
+      "videoBitstreamSha256": "ab9c5c28fc25f81b520d5791dcb43b895f94e7adac0e033d294cbb963f371b07",
+      "durationSeconds": 3.041667
+    },
+    {
+      "file": "room-animation-v2/loop-F.mp4",
+      "bytes": 1259997,
+      "sha256": "8cc3de4bb6558491525c5ea170e8f441432dcbd91da804bbfb6940b0bd58b5d8",
+      "sourceSha256": "0d79b7a9e8f0f9424028b4f662b5ef23f69435202e314e4e5f9050c9e048caa1",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "c433bc5275a88d21b69adcd88a2a060701506fd338358f0722a149eca573fee0",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "room-animation-v2/pose-A.png",
+      "bytes": 2088665,
+      "sha256": "05c3aecc584d55ce2db3905c33be7f288ce90d6a104863375b4dce8c6f176a71",
+      "sourceSha256": "05c3aecc584d55ce2db3905c33be7f288ce90d6a104863375b4dce8c6f176a71"
+    },
+    {
+      "file": "room-animation-v2/pose-B.png",
+      "bytes": 2077428,
+      "sha256": "1cd17a242ec67b1cfcf572399f3dde9accf11fb4c1768cb3ad6db7b62571752e",
+      "sourceSha256": "1cd17a242ec67b1cfcf572399f3dde9accf11fb4c1768cb3ad6db7b62571752e"
+    },
+    {
+      "file": "room-animation-v2/pose-C.png",
+      "bytes": 2179508,
+      "sha256": "e48924fcb42f6f87b5a676c304fb0edca215da49bb533c86c56943e23e2edcf7",
+      "sourceSha256": "e48924fcb42f6f87b5a676c304fb0edca215da49bb533c86c56943e23e2edcf7"
+    },
+    {
+      "file": "room-animation-v2/pose-D.png",
+      "bytes": 2058940,
+      "sha256": "ddec62f00424a89a2fe9281f8b9df9aab20f435a025a206510a5ac5794c78f75",
+      "sourceSha256": "ddec62f00424a89a2fe9281f8b9df9aab20f435a025a206510a5ac5794c78f75"
+    },
+    {
+      "file": "room-animation-v2/pose-E.png",
+      "bytes": 2040134,
+      "sha256": "03d1e2e6728de4cdca849f54d1dd7edf97d0df4e7676e060093e5c9bda893a52",
+      "sourceSha256": "03d1e2e6728de4cdca849f54d1dd7edf97d0df4e7676e060093e5c9bda893a52"
+    },
+    {
+      "file": "room-animation-v2/pose-F.png",
+      "bytes": 1925218,
+      "sha256": "3d7d9b2694daf6a0fd0d3627fd5219816ae036b84704018aee5693010bab6e13",
+      "sourceSha256": "3d7d9b2694daf6a0fd0d3627fd5219816ae036b84704018aee5693010bab6e13"
+    },
+    {
+      "file": "companion-typing-v1/B.mp4",
+      "bytes": 1635143,
+      "sha256": "35758a2ef5bfc2e38df1dcbf5e8d810298e7be2b32cf0ee5598cbada227c77be",
+      "sourceSha256": "8ed9572f6b058353fed36ec09c47cb4369225fe2877b9e61a070fe62aee50a44",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "13dc54b8b42d89d70df93792dd6143e8284a35ce825ee32427d1d7563037d44b",
+      "durationSeconds": 5.041667
+    },
+    {
+      "file": "companion-typing-v1/E.mp4",
+      "bytes": 1231482,
+      "sha256": "5ac52b32de0624a0dfce9b28d602709c098f63df66fa5ebf3d2c048bd50b10aa",
+      "sourceSha256": "60efdce87a095268d281206099342df50e16c43cfcb56d6907901ac8dfa9092a",
+      "audioTracksRemoved": 1,
+      "videoBitstreamSha256": "95896cd8021f44505768ce43c6346263bd41604697d0866539a9464f9835a1e7",
+      "durationSeconds": 5.041667
+    }
+  ]
+}
