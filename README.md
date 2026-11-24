@@ -10,29 +10,25 @@
 
 ## 先体验
 
-1. 若发布者已提供取得分发授权的完整包，Windows 用户优先下载 `deepseek-desktop-companion-complete-v1.0.0.zip`，解压到固定目录。源码用户先准备自己有权使用的素材。
+1. 按下方[下载和解压步骤](#下载哪个包)备齐源码和动画素材。
 2. 按 [安装教程](docs/INSTALL.zh-CN.md) 准备 Node.js、Microsoft Edge、WebView2、Lively，以及官方 Harness 凭据。
 3. 双击 `check-environment.cmd` 检查环境。
-4. 在该目录打开 PowerShell，依次运行：
+4. 双击 `start-deepseek-wallpaper-v3.cmd` 启动桌面壁纸，再双击 `start-deepseek-chat-v4.cmd` 打开独立聊天窗口。
 
-   ```powershell
-   .\deepseek-launcher-v4.exe start
-   .\deepseek-launcher-v4.exe chat
-   ```
-
-`start` 连接主屏桌面房间，`chat` 打开独立聊天窗口。也可使用 `start-deepseek-wallpaper-v3.cmd` 和 `start-deepseek-chat-v4.cmd`。**不要双击 HTML 文件代替启动服务。**
+如已构建 Windows 启动器，也可以在 PowerShell 中运行 `.\deepseek-launcher-v4.exe start` 和 `.\deepseek-launcher-v4.exe chat`。**不要双击 HTML 文件代替启动服务。**
 
 第一次试试“你好”“去睡觉”“起床工作”。发送普通问题时，角色会到桌前或床上的持机姿态，完成本轮真实手机打字后显示回复；模型尚未完成时会继续等待。房间必须正常播放，回复不会绕过打字结束条件。
 
 ## 下载哪个包
 
-| 文件 | 内容 | 用途 |
-| --- | --- | --- |
-| `deepseek-desktop-companion-complete-v1.0.0.zip` | 程序、文档、21 件媒体和 Windows EXE | Windows 首次体验 |
-| `deepseek-desktop-companion-source-v1.0.0.zip` | 源码、文档；无图片/视频、无编译 EXE | 阅读、修改、构建，可单独公开 |
-| `deepseek-desktop-companion-assets-v1.0.0.zip` | 两个媒体目录、媒体清单、素材说明 | 给源码包补素材 |
+| 下载 | 内容 |
+| --- | --- |
+| [v1.0.0 源码 ZIP](https://github.com/sunzhan123123/-deepseek-desktop-companion-/archive/refs/tags/v1.0.0.zip) | Windows 启动脚本、源码和教程 |
+| [v1.0.0 动画素材包 ZIP](https://github.com/sunzhan123123/-deepseek-desktop-companion-/releases/download/v1.0.0/deepseek-desktop-companion-assets-v1.0.0.zip) | 15 段视频和 6 张姿态图（37.9 MiB） |
 
-源码包与已取得使用权的素材包解压到**同一个程序目录**，保持相对路径合并，见 [安装教程](docs/INSTALL.zh-CN.md)。这些 ZIP 内没有额外套一层项目目录。仓库本身也不包含图片/视频和编译 EXE；补齐素材后可直接用 CMD 启动，或运行构建脚本生成 EXE。表中的媒体包名称描述打包形态，不表示当前已经公开发布或获得分发授权。
+1. 解压源码 ZIP，打开含有 `README.md` 和 `package.json` 的项目文件夹。
+2. 将动画素材包 ZIP 解压到这个项目文件夹。解压后，`room-animation-v2/` 和 `companion-typing-v1/` 应与 `README.md` 位于同一级。
+3. 回到上方「先体验」继续安装。同版本的下载入口与使用说明也可在 [GitHub Releases](https://github.com/sunzhan123123/-deepseek-desktop-companion-/releases/tag/v1.0.0) 查看。
 
 ## 当前行为与边界
 
